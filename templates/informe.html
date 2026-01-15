@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <h2>Filtros</h2>
+    <form method="get" action="/informe">
+        <label>
+            Estado:
+            <select name="estado">
+                <option value="" {% if not estado %}selected{% endif %}>Todos</option>
+                <option value="pendiente" {% if estado=="pendiente" %}selected{% endif %}>Pendiente</option>
+                <option value="en_curso" {% if estado=="en_curso" %}selected{% endif %}>En Curso</option>
+                <option value="completada" {% if estado=="completada" %}selected{% endif %}>Completada</option>
+            </select>
+        </label>
+
+        <label>
+            Prioridad mínima:
+            <input type="number" name="min_prioridad" min="1" max="5" value="{{ min_prioridad }}">
+        </label>
+
+        <button type="submit">Aplicar filtros</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Resumen</h2>
+    <ul>
+        <li>Total de tareas: {{ resumen.total }}</li>
+        <li>Completadas: {{ resumen.completadas }}</li>
+        <li>Porcentaje completadas: {{ resumen.porcentaje_completadas }}%</li>
+    </ul>
+</div>
+
+<div class="card">
+    <h2>Detalle de tareas</h2>
+    <table border="1" width="100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Estado</th>
+                <th>Prioridad</th>
+                <th>Horas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in tareas %}
+            <tr>
+                <td>{{ t.id }}</td>
+                <td>{{ t.titulo }}</td>
+                <td>{{ t.estado }}</td>
+                <td>{{ t.prioridad }}</td>
+                <td>{{ t.horas }}</td>
+            </tr>
+            {% endfor %}
+            {% if tareas|length == 0 %}
+            <tr>
+                <td colspan="5">No hay tareas que cumplan los filtros.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2>Gráfico: tareas por estado</h2>
+    <canvas id="graficoEstado"></canvas>
+</div>
+
+<script>
+    (function () {
+        const chartLabels = {{ labels | tojson
+    }};
+    const chartData = {{ values | tojson }};
+
+    const ctx = document.getElementById("graficoEstado");
+    if (ctx) {
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: chartLabels,
+                datasets: [{
+                    label: "Número de tareas",
+                    data: chartData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(75, 192, 192, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    }
+    }) ();
+</script>
+
+{% endblock %}
