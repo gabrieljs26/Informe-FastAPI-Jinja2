@@ -26,6 +26,11 @@ La interacción entre el usuario y el servidor para el filtrado de datos se real
 
 ---
 
+<img width="1908" height="720" alt="image" src="https://github.com/user-attachments/assets/30d698a8-c602-4aa1-827c-02e4cd680a41" />
+
+Aqui veremos el grafico que se crea al pasarle los datos
+<img width="912" height="546" alt="image" src="https://github.com/user-attachments/assets/7fb155be-0358-45a8-badd-2d896a20cc30" />
+
 ## Instrucciones de Ejecución
 
 ### Prerrequisitos
